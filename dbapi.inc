@@ -176,42 +176,7 @@ function sliceCond($label, $slice, $device, $url = "") {
 
 	$sliceCond = "pageid>=$minid and pageid<=$maxid"; // "All"
 
-	if ( 0 === strpos($slice, "Top") ) {
-		// eg, "Top100" or "Top1000"
-		if ( 1322727953 <= $crawl['startedDateTime'] ) {
-			// The first crawl with rank available is "Dec 1 2011" (startedDateTime = 1322727953)
-			$sliceCond .= " and rank > 0 and rank <= " . substr($slice, 3);
-		}
-		else {
-			// Crawls that occurred BEFORE we started saving rank.
-			if ( "Top100" === $slice || "Top1000" === $slice ) {
-				// We'll use some old global variables for Top100 and Top1000.
-				$urls = ( "Top100" === $slice ? $gaTop100 : $gaTop1000 );
-				$query = "select pageid from $pagesTable where $sliceCond and url in ('" . implode("','", $urls) . "');";
-				$result = doQuery($query);
-				$aPageids = array();
-				while ( $row = mysql_fetch_assoc($result) ) {
-					$aPageids[] = $row['pageid'];
-				}
-				mysql_free_result($result);
-				$sliceCond = "pageid in (" . implode(",", $aPageids) . ")";
-			}
-			else {
-				// If you've reached this block it means we added something higher 
-				// than "Top1000" (like Top10000 or Top100000) AND we're dealing 
-				// with a crawl that does NOT have ranks. Choices include:
-				//   1. Include all the pages. These crawls have 50K pages or less,
-				//      so it might not be too far off.
-				//   2. Only include the top 1000 using the global variable. This 
-				//      would mean we'd compare 1000 to 10,000 or 100,000 - bad.
-				//   3. Use the current rankings from the "urls" table. This would
-				//      mean that the set of top URLs would constantly change.
-				// I'm going with #1 - include all the pages - which means we don't 
-				// have to add anything more to sliceCond.
-			}
-		}
-	}
-	else if ( "url" === $slice && isset($url) ) {
+	if ( "url" === $slice && isset($url) ) {
 		$sliceCond .= " and url = '$url'";
 	}
 

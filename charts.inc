@@ -229,27 +229,20 @@ function chdsMinmax($aValues, $bZero = false) {
 
 // $minPercent is the value at which we only show one bin then stop
 function histogram($hStats, $column, $title, $id, $binMultiple=1, $minPercent=1, $color="") {
-	$aVals = explode(",", $hStats["cdf_$column"]);
-	if ( 0 == $aVals[98] ) {
-		return "<!-- $column data not available for this crawl -->";
-	}
-	$hHist = array();
-	foreach($aVals as $val) {
-		if ( $binMultiple ) {
-			$val = ceil($val / $binMultiple);
-		}
-		$val = "" . $val; // trick it in treating this as a key rather than an array index
-		if ( ! array_key_exists($val, $hHist) ) {
-			$hHist[$val] = 0;
-		}
-		$hHist[$val] = $hHist[$val] + 1;
-	}
-
-	$bFirst = true;
+	global $gLabel, $gSlice, $gPagesTable;
 	$aNames = array();
 	$aValues = array();
-	foreach( array_keys($hHist) as $xval ) {
-		$percent = $hHist[$xval];
+
+	$sliceCond = sliceCond($gLabel, $gSlice, curDevice()); //CVSNO
+	$numurls = $hStats['numurls'];
+
+	$query = "select " . ( 1 === $binMultiple ? $column : "ceil($column/$binMultiple)" ) . 
+		" as x, round(100*count(*)/$numurls) as percent from $gPagesTable where $sliceCond group by x order by x asc;";
+
+	$result = doQuery($query);
+	$bFirst = true;
+	while ($row = mysql_fetch_array($result)) {
+		list($xval, $percent) = $row;
 		if ( 0 == $percent ) {
 			continue;
 		}
@@ -283,10 +276,10 @@ function histogram($hStats, $column, $title, $id, $binMultiple=1, $minPercent=1,
 			$bFirst = false;
 		}
 	}
+	mysql_free_result($result);
 
 	return percentageColumnChart($title, $id, $aNames, $aValues, $color);
 }
-
 
 function percentageColumnChart($title, $id, $aNames, $aValues, $color="") {
 	global $gPhpFile;

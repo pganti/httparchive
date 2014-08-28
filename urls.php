@@ -77,7 +77,7 @@ INPUT { padding: 0; margin: 0; }
 
 <pre style="margin-top: 2em;">
 <?php
-$query = "select rank, urlOrig, urlFixed from $gUrlsTable where rank >= $gStart and rank <= $gEnd order by rank asc;";
+$query = "select urlOrig, urlFixed from $gUrlsTable; ";
 $result = doQuery($query);
 while ($row = mysql_fetch_assoc($result)) {
 	$url = ( $row['urlFixed'] ? $row['urlFixed'] : $row['urlOrig'] );

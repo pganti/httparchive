@@ -1551,13 +1551,13 @@ function crawledUrls($pageid=null, $n=20) {
 
 
 function curDevice() {
-	return ( isMobile() ? "iphone4" : "IE8" );
+	return ( isMobile() ? "iphone4" : "US_East_wptdriver:Chrome" );
 }
 
 
 // Return an array of devices
 function allDevices() {
-	return array("iphone4", "IE8");
+	return array("US_East_wptdriver:Chrome");
 }
 
 

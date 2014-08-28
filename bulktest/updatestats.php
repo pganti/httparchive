@@ -11,7 +11,8 @@ require_once("../utils.inc");
 require_once("../stats.inc");
 require_once("../dbapi.inc");
 
-$device = ( $gbMobile ? "iphone" : "IE8" );
+#$device = ( $gbMobile ? "iphone" : "IE8" );
+$device = 'US_East_wptdriver:Chrome';
 
 lprint("Computing missing stats...");
 

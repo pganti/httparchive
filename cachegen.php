@@ -18,7 +18,8 @@ limitations under the License.
 require_once("utils.inc");
 require_once("stats.inc");
 
-$device = ($gbMobile ? "iphone" : "IE8");
+#$device = ($gbMobile ? "iphone" : "IE8");
+$device = 'US_East_wptdriver:Chrome';
 computeMissingStats($device, true);
 
 echo "finished all slices and labels\n";
