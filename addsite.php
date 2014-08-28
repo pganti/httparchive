@@ -116,7 +116,7 @@ function confirmAdd() {
 Enter the URL you want to add to the HTTP Archive.
 </p>
 
-<form name=addsite action="<? echo $_SERVER['PHP_SELF'] ;?>" onsubmit="return confirmAdd()">
+<form name=addsite action=""/addsite.php" onsubmit="return confirmAdd()">
 URL:
 <span class="ui-widget" style="font-size: 1em;"> <input id="rurl" name="rurl" style="margin: 0;" size=35 /> </span>
 <input type="submit" value="Add" name="submit" placeholder="http://www.example.com" style="margin: 0; margin-left: 1em;" />
